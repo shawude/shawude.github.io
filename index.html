@@ -1,0 +1,434 @@
+<!doctype html>
+<!--               
+      /\ \                                     
+  ____\ \ \___      __     __  __  __  __  __  
+ /',__\\ \  _ `\  /'__`\  /\ \/\ \/\ \/\ \/\ \ 
+/\__, `\\ \ \ \ \/\ \L\.\_\ \ \_/ \_/ \ \ \_\ \
+\/\____/ \ \_\ \_\ \__/.\_\\ \___x___/'\ \____/
+ \/___/   \/_/\/_/\/__/\/_/ \/__//__/   \/___/             
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="gb2312" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>遇见纱雾の小窝</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif; 
+      margin: 0; 
+      min-height: 100dvh; 
+      display: grid;
+      place-items: center;
+      background: #ffffff center center / cover no-repeat fixed;
+      color: #000000; 
+      transition: background-color 0.3s ease, color 0.3s ease; 
+      position: relative;
+    }
+    
+    /* 背景遮罩层 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-bg, transparent);
+      z-index: -1;
+      transition: background-color 0.3s ease;
+    }
+    .card { padding: 28px 32px; border-radius: 16px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 720px; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
+    h1 { margin: 0 0 10px; font-size: clamp(22px, 3vw, 28px); }
+    p { margin: 0; opacity: 0.9; line-height: 1.6; }
+    .hint { margin-top: 12px; font-size: 14px; opacity: 0.7; }
+    
+    .theme-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 6px; align-items: center; z-index: 1000; }
+    .theme-btn { background: color-mix(in oklab, canvas, canvastext 8%); border: 1px solid color-mix(in oklab, canvastext, transparent 80%); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: all 0.2s ease; color: canvastext; white-space: nowrap; min-width: 40px; text-align: center; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      .theme-controls { top: 15px; right: 15px; gap: 8px; }
+      .theme-btn { padding: 10px 16px; font-size: 14px; min-width: 50px; min-height: 40px; }
+    }
+    
+    @media (max-width: 480px) {
+      .theme-controls { top: 10px; right: 10px; gap: 8px; }
+      .theme-btn { padding: 12px 16px; font-size: 13px; min-width: 48px; min-height: 44px; }
+    }
+    .theme-btn:hover { background: color-mix(in oklab, canvas, canvastext 12%); }
+    .theme-btn:active { transform: scale(0.95); }
+    .theme-btn.active { background: color-mix(in oklab, canvastext, transparent 15%) !important; border-color: color-mix(in oklab, canvastext, transparent 60%) !important; }
+    
+    /* 明主题时按钮为白色 */
+    [data-theme="light"] .theme-btn { background: rgba(255, 255, 255, 0.9); color: #333; border-color: rgba(0, 0, 0, 0.2); }
+    [data-theme="light"] .theme-btn:hover { background: rgba(255, 255, 255, 1); }
+    [data-theme="light"] .theme-btn.active { background: rgba(0, 0, 0, 0.1) !important; border-color: rgba(0, 0, 0, 0.3) !important; }
+    
+    /* 暗主题时按钮为黑色 */
+    [data-theme="dark"] .theme-btn { background: rgba(0, 0, 0, 0.8); color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+    [data-theme="dark"] .theme-btn:hover { background: rgba(0, 0, 0, 0.9); }
+    [data-theme="dark"] .theme-btn.active { background: rgba(255, 255, 255, 0.1) !important; border-color: rgba(255, 255, 255, 0.3) !important; }
+    
+    /* 跟随主题时，根据系统主题自动调整按钮颜色 */
+    @media (prefers-color-scheme: light) {
+      body:not([data-theme]) .theme-btn { background: rgba(255, 255, 255, 0.9); color: #333; border-color: rgba(0, 0, 0, 0.2); }
+      body:not([data-theme]) .theme-btn:hover { background: rgba(255, 255, 255, 1); }
+      body:not([data-theme]) .theme-btn.active { background: rgba(0, 0, 0, 0.1) !important; border-color: rgba(0, 0, 0, 0.3) !important; }
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme]) .theme-btn { background: rgba(0, 0, 0, 0.8); color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+      body:not([data-theme]) .theme-btn:hover { background: rgba(0, 0, 0, 0.9); }
+      body:not([data-theme]) .theme-btn.active { background: rgba(255, 255, 255, 0.1) !important; border-color: rgba(255, 255, 255, 0.3) !important; }
+    }
+    
+    /* 明主题样式 */
+    [data-theme="light"] body { 
+      color: #000000 !important; 
+    }
+    [data-theme="light"] .card { 
+      background: rgba(255, 255, 255, 0.95) !important; 
+      border-color: rgba(0, 0, 0, 0.1) !important; 
+      color: #000000 !important; 
+    }
+    [data-theme="light"] h1, 
+    [data-theme="light"] p { 
+      color: #000000 !important; 
+    }
+    
+    /* 暗主题样式 */
+    [data-theme="dark"] body { 
+      color: #ffffff !important; 
+    }
+    [data-theme="dark"] {
+      --overlay-bg: rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="dark"] .card { 
+      background: rgba(26, 26, 26, 0.95) !important; 
+      border-color: rgba(255, 255, 255, 0.1) !important; 
+      color: #ffffff !important; 
+    }
+    [data-theme="dark"] h1, 
+    [data-theme="dark"] p { 
+      color: #ffffff !important; 
+    }
+    
+    /* 按钮样式 */
+    .action-buttons { margin-top: 24px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .qq-group-btn, .download-btn { display: inline-flex; align-items: center; color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
+    .qq-group-btn { background: linear-gradient(135deg, #12b7f5, #0ea5e9); box-shadow: 0 4px 12px rgba(18, 183, 245, 0.3); }
+    .qq-group-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(18, 183, 245, 0.4); background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .download-btn { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .download-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); background: linear-gradient(135deg, #059669, #047857); }
+    .qq-group-btn:active, .download-btn:active { transform: translateY(0); }
+    
+    /* 明主题下的按钮 */
+    [data-theme="light"] .qq-group-btn { background: linear-gradient(135deg, #12b7f5, #0ea5e9); }
+    [data-theme="light"] .qq-group-btn:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    [data-theme="light"] .download-btn { background: linear-gradient(135deg, #10b981, #059669); }
+    [data-theme="light"] .download-btn:hover { background: linear-gradient(135deg, #059669, #047857); }
+    
+    /* 暗主题下的按钮 */
+    [data-theme="dark"] .qq-group-btn { background: linear-gradient(135deg, #12b7f5, #0ea5e9); }
+    [data-theme="dark"] .qq-group-btn:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    [data-theme="dark"] .download-btn { background: linear-gradient(135deg, #10b981, #059669); }
+    [data-theme="dark"] .download-btn:hover { background: linear-gradient(135deg, #059669, #047857); }
+    
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      /* 手机端不显示背景图 */
+      body {
+        background-image: none !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .action-buttons { gap: 12px; }
+      .qq-group-btn, .download-btn { padding: 10px 16px; font-size: 13px; }
+    }
+    
+    
+    /* Live2D 看板娘样式优化 */
+    #waifu {
+      z-index: 999 !important;
+    }
+    
+    /* 主题切换时看板娘适配 */
+    [data-theme="dark"] #waifu {
+      filter: brightness(0.9);
+    }
+    
+    [data-theme="light"] #waifu {
+      filter: brightness(1.1);
+    }
+    
+    /* 移动端看板娘优化 */
+    @media (max-width: 768px) {
+      #waifu {
+        transform: scale(0.8);
+        right: 10px !important;
+        bottom: 10px !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #waifu {
+        transform: scale(0.6);
+        right: 5px !important;
+        bottom: 5px !important;
+      }
+    }
+  </style>
+  <meta name="description" content="遇见纱雾の小窝" />
+  
+  <!-- 网站图标 -->
+  <link rel="icon" type="image/x-icon" href="./纱雾.ico">
+  <link rel="shortcut icon" href="./纱雾.ico">
+  <link rel="apple-touch-icon" href="./纱雾.ico">
+</head>
+<body>
+  <div class="theme-controls">
+    <button class="theme-btn active" data-theme="auto">跟随系统</button>
+    <button class="theme-btn" data-theme="light">日</button>
+    <button class="theme-btn" data-theme="dark">夜</button>
+  </div>
+  
+  <main class="card">
+    <h1>你好，这里是遇见纱雾的个人网站</h1>
+    
+    <div class="action-buttons">
+        <a href="https://qm.qq.com/q/iSRz9pn3CE" target="_blank" class="qq-group-btn">
+          加入粉丝QQ群
+        </a>
+        <a href="https://qm.qq.com/q/Gb2pyHOAwe" target="_blank" class="qq-group-btn">
+          加入粉丝QQ二群
+        </a>
+        <a href="./下载文件/玩机工具箱2.3.exe" download="玩机工具箱2.3.exe" class="download-btn">
+          下载玩机工具箱
+        </a>
+
+      </div>
+      
+  </main>
+  
+  <script>
+    
+    // 主题切换功能
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const body = document.body;
+    
+    // 从本地存储读取主题设置
+    const savedTheme = localStorage.getItem('theme') || 'auto';
+    
+    // 应用主题
+    function applyTheme(theme) {
+      console.log('Applying theme:', theme);
+      
+      // 更新按钮状态
+      themeButtons.forEach(btn => btn.classList.remove('active'));
+      const targetBtn = document.querySelector(`[data-theme="${theme}"]`);
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
+      
+      // 获取已保存的背景图（主题切换时不重新随机）
+      const currentBg = getSavedBackground();
+      
+      // 应用主题到body
+      if (theme === 'auto') {
+        body.removeAttribute('data-theme');
+        // 跟随系统主题
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          const isMobile = window.innerWidth <= 768;
+          if (isMobile) {
+            body.style.background = '#1a1a1a';
+          } else {
+            body.style.background = `#1a1a1a url("${currentBg}") center center / cover no-repeat fixed`;
+          }
+          body.style.color = '#ffffff';
+          body.style.setProperty('--overlay-bg', 'rgba(0, 0, 0, 0.4)');
+          document.querySelector('.card').style.background = 'rgba(26, 26, 26, 0.95)';
+          document.querySelector('.card').style.color = '#ffffff';
+        } else {
+          const isMobile = window.innerWidth <= 768;
+          if (isMobile) {
+            body.style.background = '#ffffff';
+          } else {
+            body.style.background = `#ffffff url("${currentBg}") center center / cover no-repeat fixed`;
+          }
+          body.style.color = '#000000';
+          body.style.setProperty('--overlay-bg', 'transparent');
+          document.querySelector('.card').style.background = 'rgba(255, 255, 255, 0.95)';
+          document.querySelector('.card').style.color = '#000000';
+        }
+      } else if (theme === 'light') {
+        body.setAttribute('data-theme', 'light');
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          body.style.background = '#ffffff';
+        } else {
+          body.style.background = `#ffffff url("${currentBg}") center center / cover no-repeat fixed`;
+        }
+        body.style.color = '#000000';
+        body.style.setProperty('--overlay-bg', 'transparent');
+        document.querySelector('.card').style.background = 'rgba(255, 255, 255, 0.95)';
+        document.querySelector('.card').style.color = '#000000';
+      } else if (theme === 'dark') {
+        body.setAttribute('data-theme', 'dark');
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          body.style.background = '#1a1a1a';
+        } else {
+          body.style.background = `#1a1a1a url("${currentBg}") center center / cover no-repeat fixed`;
+        }
+        body.style.color = '#ffffff';
+        body.style.setProperty('--overlay-bg', 'rgba(0, 0, 0, 0.4)');
+        document.querySelector('.card').style.background = 'rgba(26, 26, 26, 0.95)';
+        document.querySelector('.card').style.color = '#ffffff';
+      }
+      
+      localStorage.setItem('theme', theme);
+      console.log('Theme applied:', theme);
+    }
+    
+    // 随机背景图数组
+    const backgroundImages = [
+      './背景_PC_1.jpg',
+      './背景_PC_2.png'
+    ];
+    
+    // 检测是否是页面刷新
+    function isPageRefresh() {
+      return performance.navigation.type === 1 || 
+             (performance.getEntriesByType('navigation')[0] && 
+              performance.getEntriesByType('navigation')[0].type === 'reload');
+    }
+    
+    // 随机选择背景图
+    function setRandomBackground() {
+      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+      const selectedBg = backgroundImages[randomIndex];
+      sessionStorage.setItem('selectedBackground', selectedBg);
+      return selectedBg;
+    }
+    
+    // 获取当前背景图（页面加载时）
+    function getCurrentBackground() {
+      // 如果是页面刷新，随机选择新背景图
+      if (isPageRefresh()) {
+        return setRandomBackground();
+      }
+      
+      // 否则使用已保存的背景图，如果没有则使用默认
+      return sessionStorage.getItem('selectedBackground') || './背景_PC_1.jpg';
+    }
+    
+    // 获取已保存的背景图（主题切换时使用）
+    function getSavedBackground() {
+      return sessionStorage.getItem('selectedBackground') || './背景_PC_1.jpg';
+    }
+    
+    // 应用背景图到body
+    function applyBackground(bgImage) {
+      const currentTheme = body.getAttribute('data-theme') || 'auto';
+      let bgColor = '#ffffff';
+      
+      if (currentTheme === 'dark') {
+        bgColor = '#1a1a1a';
+      } else if (currentTheme === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        bgColor = '#1a1a1a';
+      }
+      
+      // 检测是否为移动端
+      const isMobile = window.innerWidth <= 768;
+      
+      if (isMobile) {
+        // 手机端只显示纯色背景
+        body.style.background = `${bgColor}`;
+      } else {
+        // 电脑端显示背景图
+        body.style.background = `${bgColor} url("${bgImage}") center center / cover no-repeat fixed`;
+      }
+    }
+    
+    // 初始化背景图
+    const selectedBg = getCurrentBackground();
+    
+    // 初始化主题
+    applyTheme(savedTheme);
+    
+    // 绑定事件（支持触摸和点击）
+    themeButtons.forEach(btn => {
+      // 防止双击缩放
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+      }, { passive: false });
+      
+      // 点击事件
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const theme = btn.getAttribute('data-theme');
+        if (theme) {
+          applyTheme(theme);
+        }
+      });
+      
+      // 触摸事件（移动端备用）
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        const theme = btn.getAttribute('data-theme');
+        if (theme) {
+          applyTheme(theme);
+        }
+      });
+    });
+  </script>
+  
+  <!-- Live2D 看板娘 -->
+  <script>
+    // 配置 Live2D 在移动端也显示
+    window.live2d_settings = {
+      model: {
+        // 使用更稳定的模型路径
+        jsonPath: 'https://cdn.jsdelivr.net/gh/fghrsh/live2d_api@master/model/Potion-Maker/Tia/index.json',
+        scale: 1
+      },
+      display: {
+        position: 'right',
+        width: 150,
+        height: 300,
+        hOffset: 0,
+        vOffset: -20
+      },
+      mobile: {
+        show: true,
+        scale: 0.5
+      },
+      dialog: {
+        enable: true,
+        script: {
+          'every day': [
+            '欢迎来到纱雾的小窝！',
+            '今天也要加油哦～',
+            '有什么问题可以问我呢！',
+            '点击右上角可以切换主题哦！'
+          ]
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+  <script>
+    // 等待页面加载完成后初始化
+    window.addEventListener('load', function() {
+      // 检查是否成功加载了 Live2D
+      if (typeof initWidget !== 'undefined') {
+        console.log('Live2D 初始化成功');
+      } else {
+        console.log('Live2D 未加载，不显示任何内容');
+      }
+    });
+  </script>
+</body>
+</html>
