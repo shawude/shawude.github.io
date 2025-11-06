@@ -9,7 +9,7 @@
 -->
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>遇见纱雾の小窝</title>
   <style>
@@ -38,27 +38,27 @@
       z-index: -1;
       transition: background-color 0.3s ease;
     }
-    .card { padding: 28px 32px; border-radius: 16px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 720px; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
+    。card { padding: 28px 32px; border-radius: 16px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 720px; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
     h1 { margin: 0 0 10px; font-size: clamp(22px, 3vw, 28px); }
     p { margin: 0; opacity: 0.9; line-height: 1.6; }
-    .hint { margin-top: 12px; font-size: 14px; opacity: 0.7; }
+    。hint { margin-top: 12px; font-size: 14px; opacity: 0.7; }
     
-    .theme-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 6px; align-items: center; z-index: 1000; }
-    .theme-btn { background: color-mix(in oklab, canvas, canvastext 8%); border: 1px solid color-mix(in oklab, canvastext, transparent 80%); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: all 0.2s ease; color: canvastext; white-space: nowrap; min-width: 40px; text-align: center; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    。theme-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 6px; align-items: center; z-index: 1000; }
+    。theme-btn { background: color-mix(in oklab, canvas, canvastext 8%); border: 1px solid color-mix(in oklab, canvastext, transparent 80%); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: all 0.2s ease; color: canvastext; white-space: nowrap; min-width: 40px; text-align: center; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     
     /* 移动端优化 */
     @media (max-width: 768px) {
-      .theme-controls { top: 15px; right: 15px; gap: 8px; }
-      .theme-btn { padding: 10px 16px; font-size: 14px; min-width: 50px; min-height: 40px; }
+      。theme-controls { top: 15px; right: 15px; gap: 8px; }
+      。theme-btn { padding: 10px 16px; font-size: 14px; min-width: 50px; min-height: 40px; }
     }
     
     @media (max-width: 480px) {
-      .theme-controls { top: 10px; right: 10px; gap: 8px; }
-      .theme-btn { padding: 12px 16px; font-size: 13px; min-width: 48px; min-height: 44px; }
+      。theme-controls { top: 10px; right: 10px; gap: 8px; }
+      。theme-btn { padding: 12px 16px; font-size: 13px; min-width: 48px; min-height: 44px; }
     }
-    .theme-btn:hover { background: color-mix(in oklab, canvas, canvastext 12%); }
-    .theme-btn:active { transform: scale(0.95); }
-    .theme-btn.active { background: color-mix(in oklab, canvastext, transparent 15%) !important; border-color: color-mix(in oklab, canvastext, transparent 60%) !important; }
+    。theme-btn:hover { background: color-mix(in oklab, canvas, canvastext 12%); }
+    。theme-btn:active { transform: scale(0.95); }
+    。theme-btn.active { background: color-mix(in oklab, canvastext, transparent 15%) !important; border-color: color-mix(in oklab, canvastext, transparent 60%) !important; }
     
     /* 明主题时按钮为白色 */
     [data-theme="light"] .theme-btn { background: rgba(255, 255, 255, 0.9); color: #333; border-color: rgba(0, 0, 0, 0.2); }
